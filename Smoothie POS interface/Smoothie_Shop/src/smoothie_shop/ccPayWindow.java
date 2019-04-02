@@ -4,26 +4,28 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.awt.GridLayout;
 
 public class ccPayWindow extends JFrame{
-	private static final long serialVersionUID = 1L;
-
+	
+	SmoothieShop tempShop;
+	
 	// Objects for GUI
-	private JFrame javaCCPayFrame = new JFrame("Credit Card Payment");
+	JDialog javaCCPayFrame = new JDialog();
 	
-	private Label cardNumLabel = new Label("Enter a 16 digit credit card number");
-	private TextField cardNum = new TextField("", 16);
+	JLabel cardNumLabel = new JLabel("Enter a 16 digit credit card number");
+	JTextField cardNum = new JTextField("", 16);
 	
-	private Label cardExpLabel = new Label("Enter the expiration date : MMYY");
-	private TextField cardExp = new TextField("", 16);
+	JLabel cardExpLabel = new JLabel("Enter the expiration date : MMYY");
+	JTextField cardExp = new JTextField("", 16);
 	
-	private Label cardCVCLabel = new Label("Enter the 3 digit cvc number");
-	private TextField cardCVC = new TextField("", 16);
+	JLabel cardCVCLabel = new JLabel("Enter the 3 digit cvc number");
+	JTextField cardCVC = new JTextField("", 16);
 	
-	private Button btCCPay = new Button("Press to Pay");
+	JButton btCCPay = new JButton("Press to Pay");
 	
-	public ccPayWindow() {
+	public ccPayWindow(double totalOwed, SmoothieShop _tempShop) {
+		
+		tempShop = _tempShop;
 		
 		Panel numPanel = new Panel(new BorderLayout());
 		Panel expPanel = new Panel(new BorderLayout());
@@ -39,6 +41,8 @@ public class ccPayWindow extends JFrame{
 		CVCPanel.add(cardCVC, BorderLayout.CENTER);
 		CVCPanel.add(btCCPay, BorderLayout.SOUTH);
 		
+		btCCPay.setFont(new Font("Serif", Font.BOLD, 20));
+		
 		btCCPay.addActionListener(new ccFinalPay());
 		
 		Panel ccFieldPanel = new Panel(new GridLayout(0, 1, 20, 20));
@@ -49,6 +53,8 @@ public class ccPayWindow extends JFrame{
 		javaCCPayFrame.add(ccFieldPanel);
 		javaCCPayFrame.pack();
 		
+		// Make this frame the only interactable frame until disposed of
+		javaCCPayFrame.setModal(true);
 		
 		javaCCPayFrame.setLocationRelativeTo(null);
 		javaCCPayFrame.setVisible(true);
@@ -64,6 +70,9 @@ public class ccPayWindow extends JFrame{
 			 * details online to confirm validity
 			 */
 			
+			// Calculate change
+			
+			tempShop.reset();
 			// Deconstruct the payment window
 			javaCCPayFrame.dispose();
 		}
