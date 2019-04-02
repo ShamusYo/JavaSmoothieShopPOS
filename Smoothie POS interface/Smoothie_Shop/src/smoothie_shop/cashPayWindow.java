@@ -4,30 +4,41 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.awt.GridLayout;
 
 public class cashPayWindow extends JFrame{
-	private static final long serialVersionUID = 1L;
+	
+	static public Double owed;
+	
+	public SmoothieShop tempShop;
 	
 	// Objects for GUI
-	private JFrame javaCashPayFrame = new JFrame("Cash Payment");
+	JDialog javaCashPayFrame = new JDialog();
 	
-	private Label cashValLabel = new Label("Enter cash amount paid");
-	private TextField cashNum = new TextField("", 16);
+	JLabel cashValLabel = new JLabel("Enter cash amount paid");
+	JTextField cashNum = new JTextField("");
 
-	private Button btCashPay = new Button("Press to Pay");
+	JButton btCashPay = new JButton("Press to Pay");
 	
-	public cashPayWindow() {
+	public cashPayWindow(double totalOwed, SmoothieShop _tempShop) {
+		
+		owed = totalOwed;
+		tempShop = _tempShop;
+		
 		Panel numCashPanel = new Panel(new BorderLayout());
 		
 		numCashPanel.add(cashValLabel, BorderLayout.NORTH);
 		numCashPanel.add(cashNum, BorderLayout.CENTER);
 		numCashPanel.add(btCashPay, BorderLayout.SOUTH);
 		
+		btCashPay.setFont(new Font("Serif", Font.BOLD, 20));
+		
 		btCashPay.addActionListener(new cashFinalPay());
 		
 		javaCashPayFrame.add(numCashPanel);
 		javaCashPayFrame.pack();
+		
+		// Make this frame the only interactable frame until disposed of
+		javaCashPayFrame.setModal(true);
 		
 		javaCashPayFrame.setLocationRelativeTo(null);
 		javaCashPayFrame.setVisible(true);
@@ -36,21 +47,24 @@ public class cashPayWindow extends JFrame{
 	class cashFinalPay implements ActionListener {
 		public void actionPerformed(ActionEvent click) {
 			
-			// Check for valid input
+			// Check for valid input ??ioexception??
 			
-			// Call function to calculate amount owed
+			// Parse text and convert to a double
+			double paidAmount = Double.parseDouble(cashNum.getText());
 			
-			// Display amount owed
+			// Call function to calculate change
+			Double change = calculateChange(paidAmount);
 			
-			// Display an exit message 
-			
-			/* FIXME:: add a timer that deconstructs the window after 
-			 * displaying an exit message for 10 seconds
-			 */
+			// Display change and exit message
+			new ChangeWindow(change, tempShop);
 			
 			// For now deconstruct the window
 			javaCashPayFrame.dispose(); 
+			
 		}
 	}
 	
+	public double calculateChange(double paid) {
+		return (paid = (paid - owed));
+	}
 }
